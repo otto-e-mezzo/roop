@@ -2,46 +2,40 @@
 <style>
   :root {
     --stage: #d9dedd;
-    --ink: #1b1b1b;
-    --ink-soft: #5c625f;
     --red: #dd5425;
-    --panel: rgba(255,255,255,.74);
-    --panel-line: rgba(27,27,27,.10);
-    --rule: rgba(27,27,27,.14);
+    --red-soft: rgba(221, 84, 37, .62);
+    --panel: rgba(255, 255, 255, .78);
+    --panel-line: rgba(221, 84, 37, .20);
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --stage: #1c2020; --ink: #e8eae9; --ink-soft: #9aa2a0; --red: #f4713f;
-      --panel: rgba(255,255,255,.07); --panel-line: rgba(255,255,255,.12);
-      --rule: rgba(255,255,255,.14);
+      --stage: #1c2020; --red: #f4713f; --red-soft: rgba(244, 113, 63, .62);
+      --panel: rgba(255, 255, 255, .07); --panel-line: rgba(244, 113, 63, .24);
     }
   }
   :root[data-theme="dark"] {
-    --stage: #1c2020; --ink: #e8eae9; --ink-soft: #9aa2a0; --red: #f4713f;
-    --panel: rgba(255,255,255,.07); --panel-line: rgba(255,255,255,.12);
-    --rule: rgba(255,255,255,.14);
+    --stage: #1c2020; --red: #f4713f; --red-soft: rgba(244, 113, 63, .62);
+    --panel: rgba(255, 255, 255, .07); --panel-line: rgba(244, 113, 63, .24);
   }
   :root[data-theme="light"] {
-    --stage: #d9dedd; --ink: #1b1b1b; --ink-soft: #5c625f; --red: #dd5425;
-    --panel: rgba(255,255,255,.74); --panel-line: rgba(27,27,27,.10);
-    --rule: rgba(27,27,27,.14);
+    --stage: #d9dedd; --red: #dd5425; --red-soft: rgba(221, 84, 37, .62);
+    --panel: rgba(255, 255, 255, .78); --panel-line: rgba(221, 84, 37, .20);
   }
 
   .wrap {
     max-width: 1100px; margin: 0 auto; padding: 28px 20px 40px;
-    color: var(--ink);
+    color: var(--red);
     font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue",
       "Hiragino Sans", "Noto Sans JP", sans-serif;
     display: flex; flex-direction: column; gap: 18px;
   }
-  .masthead { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
-  .mark { font-size: 15px; font-weight: 700; letter-spacing: .22em;
-    text-transform: uppercase; color: var(--red); }
-  .mark-sub { font-size: 12px; letter-spacing: .18em; text-transform: uppercase;
-    color: var(--ink-soft); }
+  .masthead { display: flex; align-items: center; gap: 13px; flex-wrap: wrap; }
+  .logo { display: block; color: var(--red); }
+  .logo svg { display: block; height: 26px; width: auto; fill: currentColor; }
+  .mark-sub { font-size: 12px; letter-spacing: .16em; color: var(--red-soft); }
 
   .stage {
-    position: relative; height: min(66vh, 560px); min-height: 380px;
+    position: relative; height: min(78vh, 720px); min-height: 440px;
     border-radius: 14px; overflow: hidden;
     background: var(--stage); border: 1px solid var(--panel-line);
   }
@@ -55,7 +49,7 @@
   }
   .bar button {
     font: inherit; font-size: 12px; letter-spacing: .08em; padding: 7px 13px;
-    border: 0; border-radius: 999px; background: transparent; color: var(--ink);
+    border: 0; border-radius: 999px; background: transparent; color: var(--red);
     cursor: pointer;
   }
   .bar button:hover { background: rgba(127,127,127,.16); }
@@ -63,49 +57,42 @@
   .bar button:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
 
   .hint { position: absolute; right: 14px; top: 12px; font-size: 11px;
-    letter-spacing: .06em; color: var(--ink-soft); }
+    letter-spacing: .06em; color: var(--red-soft); }
 
-  .specs {
-    display: grid; gap: 0 26px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    border-top: 1px solid var(--rule); padding-top: 14px;
-  }
-  .spec { display: flex; flex-direction: column; gap: 3px; padding: 6px 0; }
-  .spec dt { font-size: 10px; letter-spacing: .16em; text-transform: uppercase;
-    color: var(--ink-soft); }
-  .spec dd { margin: 0; font-size: 14px; font-variant-numeric: tabular-nums; }
-  .note { font-size: 12.5px; line-height: 1.7; color: var(--ink-soft); max-width: 62ch; }
+  .specs { display: flex; gap: 26px; flex-wrap: wrap; }
+  .spec { display: flex; flex-direction: column; gap: 3px; }
+  .spec-label { font-size: 10px; line-height: 1.4; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--red-soft); }
+  .spec-val { font-size: 14px; line-height: 1.4; font-variant-numeric: tabular-nums; }
 </style>
 
 <div class="wrap">
   <div class="masthead">
-    <span class="mark">roop</span>
-    <span class="mark-sub">package mockup — 渡邉工業</span>
+    <span class="logo" role="img" aria-label="roop"><svg viewBox="0 0 145.16 65.02" xmlns="http://www.w3.org/2000/svg" fill="currentColor" aria-hidden="true"><g id="_レイヤー_1-2" data-name="レイヤー 1"> <path d="M78.54,14.22l-5.98,6.04-7.83,7.83v-6.43l-7.37-7.44h-20.47l-7.37,7.44v20.75l7.37,7.44h20.36v.04l.04-.04h.06l6.5-6.56,7.31-7.31v6.43l7.37,7.44h20.47l7.37-7.44v-20.75l-7.37-7.44h-20.47ZM55.29,39.48l-2.5,2.5h-11.31l-2.5-2.5v-14.88l2.5-2.5h11.31l2.5,2.5v14.88ZM96.93,39.48l-2.5,2.5h-11.31l-2.5-2.5v-14.88l2.5-2.5h11.31l2.5,2.5v14.88Z"/> <path d="M137.79,14.22h-13.88l-5.22,5.22v-5.22h-8.73v50.81h9.45v-18.96l4.58,3.79h13.81l7.37-7.44v-20.75l-7.37-7.44ZM135.72,39.33l-2.5,2.5h-8.16l-5.65-5.08v-8.73l5.72-5.8h8.09l2.5,2.5v14.6Z"/> <path d="M0,14.22h8.73v5.94l5.72-5.94h10.16v8.01h-8.23l-6.94,7.16v20.47H0V14.22Z"/> <g> <path d="M7.82,1.92h1.61l-1.84,5.22h-1.6l-1.21-3.39-1.22,3.39h-1.62L.1,1.92h1.68l1.1,3.55,1.22-3.51h1.39l1.24,3.48,1.09-3.52Z"/> <path d="M9.58,5.68c0-.57.24-.99.73-1.27s1.24-.44,2.27-.47l1.23-.03v-.2c0-.59-.38-.88-1.15-.88-.71,0-1.13.19-1.27.58l-1.49-.12c.21-1.02,1.15-1.53,2.82-1.53,1.77,0,2.66.69,2.66,2.08v3.3h-1.52v-.69c-.29.29-.61.5-.96.63-.34.13-.74.2-1.18.2-.69,0-1.21-.14-1.58-.42-.37-.28-.55-.67-.55-1.19ZM11.16,5.56c0,.43.34.64,1.02.64.28,0,.54-.04.79-.14.25-.09.45-.22.6-.38.16-.17.24-.37.24-.61v-.25l-1.13.03c-.53.01-.91.08-1.16.19s-.36.29-.36.52Z"/> <path d="M17,5.33v-2.2h-1.01v-1.21h1.01V.53h1.66v1.39h1.67v1.21h-1.67v2.13c0,.26.06.45.19.56s.32.17.59.17.54-.05.84-.14l.22,1.16c-.25.08-.49.14-.73.17-.24.04-.5.06-.79.06-.7,0-1.21-.15-1.51-.46-.31-.3-.46-.79-.46-1.46Z"/> <path d="M21.21,5.68c0-.57.24-.99.73-1.27s1.24-.44,2.27-.47l1.23-.03v-.2c0-.59-.38-.88-1.15-.88-.71,0-1.13.19-1.27.58l-1.49-.12c.21-1.02,1.15-1.53,2.82-1.53,1.77,0,2.66.69,2.66,2.08v3.3h-1.52v-.69c-.29.29-.61.5-.96.63-.34.13-.74.2-1.18.2-.69,0-1.21-.14-1.58-.42-.37-.28-.55-.67-.55-1.19ZM22.79,5.56c0,.43.34.64,1.02.64.28,0,.54-.04.79-.14.25-.09.45-.22.6-.38.16-.17.24-.37.24-.61v-.25l-1.13.03c-.53.01-.91.08-1.16.19s-.36.29-.36.52Z"/> <path d="M27.93,1.92h1.63v.8c.29-.32.6-.56.95-.72s.74-.24,1.17-.24c.68,0,1.2.17,1.57.51.37.34.55.84.55,1.48v3.39h-1.66v-3.08c0-.35-.08-.61-.26-.77-.17-.16-.44-.25-.81-.25-.2,0-.4.04-.59.11-.19.07-.36.18-.5.31-.26.24-.39.52-.39.85v2.83h-1.66V1.92Z"/> <path d="M34.69,5.68c0-.57.24-.99.73-1.27s1.24-.44,2.27-.47l1.23-.03v-.2c0-.59-.38-.88-1.15-.88-.71,0-1.13.19-1.27.58l-1.49-.12c.21-1.02,1.15-1.53,2.82-1.53,1.77,0,2.66.69,2.66,2.08v3.3h-1.52v-.69c-.29.29-.61.5-.96.63-.34.13-.74.2-1.18.2-.69,0-1.21-.14-1.58-.42-.37-.28-.55-.67-.55-1.19ZM36.27,5.56c0,.43.34.64,1.02.64.28,0,.54-.04.79-.14.25-.09.45-.22.6-.38.16-.17.24-.37.24-.61v-.25l-1.13.03c-.53.01-.91.08-1.16.19s-.36.29-.36.52Z"/> <path d="M43.14,7.14h-1.63V0h1.66v2.65c.23-.29.53-.51.89-.66.36-.15.75-.23,1.19-.23.51,0,.96.11,1.34.34.38.23.68.54.89.95.21.4.32.88.32,1.42s-.11,1.03-.33,1.46c-.22.43-.53.76-.94,1s-.89.37-1.44.37c-.85,0-1.5-.28-1.95-.84v.68ZM43.16,4.38v.25c0,.42.13.76.4,1.03s.62.39,1.06.39c.49,0,.87-.13,1.12-.39.25-.26.38-.65.38-1.15s-.12-.85-.38-1.11c-.25-.26-.61-.39-1.07-.39s-.8.13-1.08.39c-.28.26-.42.59-.42.98Z"/> <path d="M48.65,4.59c0-.57.13-1.07.39-1.5.26-.42.62-.75,1.08-.98.46-.23,1-.35,1.62-.35.95,0,1.68.24,2.19.71.51.47.77,1.13.77,1.99v.45h-4.44c.05.44.2.77.45.98.25.21.6.31,1.04.31.73,0,1.18-.21,1.34-.64h1.55c-.28,1.17-1.26,1.75-2.94,1.75-.96,0-1.71-.24-2.24-.71-.53-.48-.8-1.14-.8-2ZM52.76,3.12c-.22-.18-.57-.28-1.04-.28s-.83.11-1.04.33-.34.49-.39.82h2.84c-.03-.4-.15-.69-.37-.88Z"/> <path d="M58.64,0h1.66v3.69l2.31-1.77h2.06l-2.25,1.71,2.48,3.51h-1.84l-1.8-2.65-.96.72v1.93h-1.66V0Z"/> <path d="M64.95,4.55c0-.58.13-1.08.39-1.5.26-.42.63-.74,1.11-.96.48-.22,1.05-.33,1.71-.33.99,0,1.77.24,2.32.72.55.48.83,1.16.83,2.03,0,.57-.13,1.07-.39,1.49-.26.42-.63.74-1.11.96-.48.23-1.05.34-1.71.34-.99,0-1.76-.24-2.31-.72s-.83-1.16-.83-2.03ZM66.65,4.53c0,.49.13.86.38,1.12.25.26.62.39,1.09.39s.85-.13,1.11-.39c.26-.26.38-.64.38-1.12s-.13-.87-.38-1.14c-.26-.26-.62-.39-1.09-.39s-.84.13-1.1.39c-.26.26-.38.64-.38,1.14Z"/> <path d="M76.58,6.64v-.53c-.47.56-1.17.84-2.08.84-.51,0-.95-.11-1.33-.32-.38-.21-.68-.51-.9-.9-.22-.39-.33-.83-.33-1.34s.11-.96.33-1.35c.22-.4.54-.71.95-.94s.89-.34,1.44-.34c.43,0,.81.07,1.13.21.32.14.6.34.83.62v-.67h1.62v4.39c0,1-.25,1.73-.74,2.19-.5.46-1.27.69-2.33.69-.93,0-1.63-.14-2.12-.43s-.77-.73-.86-1.33h1.61c.07.23.21.39.42.49s.52.15.94.15c.49,0,.84-.12,1.07-.35.23-.23.35-.59.35-1.08ZM76.18,3.34c-.27-.23-.63-.35-1.06-.35-.47,0-.84.12-1.1.36-.26.24-.38.58-.38,1.01s.13.77.38,1.01c.25.24.61.37,1.06.37s.79-.12,1.08-.35c.29-.23.43-.55.43-.94v-.15c0-.41-.14-.73-.41-.96Z"/> <path d="M79.47,7.84c.13.04.25.07.37.08.12.02.24.03.36.03.24,0,.44-.05.59-.16s.29-.29.42-.55l.21-.43-2.57-4.89h1.81l1.55,3.42,1.42-3.42h1.74l-2.67,5.5c-.22.45-.43.81-.63,1.07-.2.26-.43.44-.67.54-.25.1-.55.15-.9.15-.23,0-.45-.02-.64-.05s-.4-.09-.62-.17l.24-1.13Z"/> <path d="M85.27,4.55c0-.58.13-1.08.39-1.5.26-.42.63-.74,1.11-.96.48-.22,1.05-.33,1.71-.33.99,0,1.77.24,2.32.72.55.48.83,1.16.83,2.03,0,.57-.13,1.07-.39,1.49-.26.42-.63.74-1.11.96-.48.23-1.05.34-1.71.34-.99,0-1.76-.24-2.31-.72s-.83-1.16-.83-2.03ZM86.97,4.53c0,.49.13.86.38,1.12.25.26.62.39,1.09.39s.85-.13,1.11-.39c.26-.26.38-.64.38-1.12s-.13-.87-.38-1.14c-.26-.26-.62-.39-1.09-.39s-.84.13-1.1.39c-.26.26-.38.64-.38,1.14Z"/> </g> </g></svg></span>
+    <span class="mark-sub">渡邊工業</span>
   </div>
 
   <div class="stage">
     <canvas id="c" aria-label="roopパッケージの3Dモデル。ドラッグで回転します。"></canvas>
-    <div class="hint">ドラッグで回転 ／ ホイールでズーム</div>
+    <div class="hint">drag to rotate / scroll to zoom</div>
     <div class="bar">
-      <button data-v="front">正面</button>
-      <button data-v="back">背面</button>
-      <button data-v="left">左</button>
-      <button data-v="right">右</button>
-      <button data-v="top">天</button>
-      <button data-v="bottom">底</button>
-      <button id="spin" class="on">回転</button>
+      <button data-v="front">front</button>
+      <button data-v="back">back</button>
+      <button data-v="left">left</button>
+      <button data-v="right">right</button>
+      <button data-v="top">top</button>
+      <button data-v="bottom">bottom</button>
+      <button id="spin" class="on">spin</button>
     </div>
   </div>
 
-  <dl class="specs">
-    <div class="spec"><dt>寸法</dt><dd>170 × 90 × 40 mm</dd></div>
-    <div class="spec"><dt>角丸</dt><dd>R 1.5 mm</dd></div>
-    <div class="spec"><dt>解像度</dt><dd>304.8 dpi</dd></div>
-    <div class="spec"><dt>元データ</dt><dd>展開図SVG 6枚</dd></div>
-  </dl>
+  <div class="specs">
+    <div class="spec">
+      <span class="spec-label">寸法</span>
+      <span class="spec-val">170 × 90 × 40 mm</span>
+    </div>
+  </div>
 
-  <p class="note">
-    6面とも展開図のままの向きで貼っています。天面（FOUR TAPS TO A LOOP）は展開図上で180°回転して配置されているため、正面を手前にして上から見ると上下逆さまに読めます。印刷面は角のRをまたいで連続し、折り目の中央で隣の面に切り替わります。
-  </p>
 </div>
 
 <script>
@@ -208,7 +195,7 @@ function lookAt(e, c, u){
     -dot(x,e),-dot(y,e),-dot(z,e),1]);
 }
 
-let yaw = -0.62, pitch = 0.30, dist = 0.46;
+let yaw = -0.62, pitch = 0.30, dist = 0.38;
 let tYaw = yaw, tPitch = pitch, tDist = dist, spin = true;
 const VIEWS = { front:[0,0.06], back:[Math.PI,0.06], left:[-Math.PI/2,0.06],
   right:[Math.PI/2,0.06], top:[0,1.5], bottom:[0,-1.5] };
@@ -221,13 +208,13 @@ spinBtn.onclick = () => setSpin(!spin);
 document.querySelectorAll('[data-v]').forEach(b => b.onclick = () => {
   const v = VIEWS[b.dataset.v]; setSpin(false);
   tYaw = Math.round((tYaw - v[0]) / (Math.PI*2)) * Math.PI*2 + v[0];
-  tPitch = v[1]; tDist = 0.40;
+  tPitch = v[1]; tDist = 0.34;
 });
 
 const q = new URLSearchParams(location.search);
 if (VIEWS[q.get('view')]){
   const v = VIEWS[q.get('view')];
-  yaw = tYaw = v[0]; pitch = tPitch = v[1]; tDist = dist = 0.40; setSpin(false);
+  yaw = tYaw = v[0]; pitch = tPitch = v[1]; tDist = dist = 0.34; setSpin(false);
 }
 if (q.has('d')) tDist = dist = Math.max(0.22, Math.min(1.2, parseFloat(q.get('d'))));
 if (q.has('yaw')) yaw = tYaw = parseFloat(q.get('yaw'));
