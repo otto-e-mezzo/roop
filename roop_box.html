@@ -1,29 +1,17 @@
 <title>roop — package 3D</title>
 <style>
   :root {
-    --stage: #d9dedd;
+    --stage: #e5e9e8;
     --red: #dd5425;
     --red-soft: rgba(221, 84, 37, .62);
     --panel: rgba(255, 255, 255, .78);
     --panel-line: rgba(221, 84, 37, .20);
   }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --stage: #1c2020; --red: #f4713f; --red-soft: rgba(244, 113, 63, .62);
-      --panel: rgba(255, 255, 255, .07); --panel-line: rgba(244, 113, 63, .24);
-    }
-  }
-  :root[data-theme="dark"] {
-    --stage: #1c2020; --red: #f4713f; --red-soft: rgba(244, 113, 63, .62);
-    --panel: rgba(255, 255, 255, .07); --panel-line: rgba(244, 113, 63, .24);
-  }
-  :root[data-theme="light"] {
-    --stage: #d9dedd; --red: #dd5425; --red-soft: rgba(221, 84, 37, .62);
-    --panel: rgba(255, 255, 255, .78); --panel-line: rgba(221, 84, 37, .20);
-  }
+  html, body { background: var(--stage); }
 
   .wrap {
     max-width: 1100px; margin: 0 auto; padding: 28px 20px 40px;
+    background: var(--stage);
     color: var(--red);
     font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue",
       "Hiragino Sans", "Noto Sans JP", sans-serif;
@@ -58,6 +46,10 @@
 
   .hint { position: absolute; right: 14px; top: 12px; font-size: 11px;
     letter-spacing: .06em; color: var(--red-soft); }
+
+  .bare .masthead, .bare .hint, .bare .bar, .bare .specs { display: none; }
+  .bare.wrap { max-width: none; padding: 0; }
+  .bare .stage { height: 100vh; min-height: 0; border: 0; border-radius: 0; }
 
   .specs { display: flex; gap: 26px; flex-wrap: wrap; }
   .spec { display: flex; flex-direction: column; gap: 3px; }
@@ -115,14 +107,14 @@ void main(){ vN = aNrm; vP = aPos; vUv = aUv; gl_Position = uMVP * vec4(aPos,1.0
 `#version 300 es
 precision highp float;
 in vec3 vN; in vec3 vP; in vec2 vUv;
-uniform sampler2D uTex; uniform float uDim; uniform vec3 uEye; out vec4 o;
+uniform sampler2D uTex; uniform vec3 uEye; out vec4 o;
 void main(){
   vec3 N = normalize(vN);
   vec3 L = normalize(vec3(-0.35, 0.86, 0.45));
   vec3 V = normalize(uEye - vP);
-  float d = max(dot(N, L), 0.0);
-  float s = pow(max(dot(reflect(-L, N), V), 0.0), 26.0) * 0.05;
-  vec3 c = texture(uTex, vUv).rgb * ((0.80 + 0.24 * d) * uDim) + s * uDim;
+  float hl = 0.5 + 0.5 * dot(N, L);
+  float s = pow(max(dot(reflect(-L, N), V), 0.0), 26.0) * 0.07;
+  vec3 c = texture(uTex, vUv).rgb * (0.86 + 0.20 * hl) + s;
   o = vec4(c, 1.0);
 }`);
 
@@ -134,7 +126,7 @@ precision highp float;
 in vec2 vP; uniform float uFade; uniform vec3 uCol; out vec4 o;
 void main(){
   float r = length(vec2(vP.x/0.150, vP.y/0.062));
-  o = vec4(uCol, smoothstep(1.0, 0.15, r) * 0.34 * uFade);
+  o = vec4(uCol, smoothstep(1.0, 0.15, r) * 0.27 * uFade);
 }`);
 
 const vao = gl.createVertexArray();
@@ -220,6 +212,7 @@ if (q.has('d')) tDist = dist = Math.max(0.22, Math.min(1.2, parseFloat(q.get('d'
 if (q.has('yaw')) yaw = tYaw = parseFloat(q.get('yaw'));
 if (q.has('pitch')) pitch = tPitch = parseFloat(q.get('pitch'));
 if (q.get('spin') === '0') setSpin(false);
+if (q.has('bare')) document.querySelector('.wrap').classList.add('bare');
 
 let drag = null;
 cv.addEventListener('pointerdown', e => { drag = [e.clientX, e.clientY];
@@ -234,29 +227,23 @@ addEventListener('pointerup', () => { drag = null; cv.classList.remove('dragging
 cv.addEventListener('wheel', e => { e.preventDefault();
   tDist = Math.max(0.22, Math.min(1.2, tDist * (1 + e.deltaY * 0.0012))); }, {passive:false});
 
-let bg = [0.851, 0.871, 0.867], dim = 1.0, shadowCol = [0.05, 0.06, 0.07];
-function readTheme(){
+const bg = (() => {
   const v = getComputedStyle(document.documentElement).getPropertyValue('--stage').trim();
   const m = v.match(/^#([0-9a-f]{6})$/i);
-  if (!m) return;
+  if (!m) return [0.898, 0.914, 0.910];
   const n = parseInt(m[1], 16);
-  bg = [(n>>16 & 255)/255, (n>>8 & 255)/255, (n & 255)/255];
-  const lum = 0.2126*bg[0] + 0.7152*bg[1] + 0.0722*bg[2];
-  dim = lum < 0.35 ? 0.82 : 1.0;
-  shadowCol = lum < 0.35 ? [0, 0, 0] : [0.05, 0.06, 0.07];
-}
-readTheme();
-new MutationObserver(readTheme).observe(document.documentElement,
-  {attributes:true, attributeFilter:['data-theme','class','style']});
-matchMedia('(prefers-color-scheme: dark)').addEventListener('change', readTheme);
+  return [(n >> 16 & 255) / 255, (n >> 8 & 255) / 255, (n & 255) / 255];
+})();
+const shadowCol = [0.05, 0.06, 0.07];
 
 const uMVPb = gl.getUniformLocation(boxP,'uMVP'), uTex = gl.getUniformLocation(boxP,'uTex');
-const uDim = gl.getUniformLocation(boxP,'uDim'), uEye = gl.getUniformLocation(boxP,'uEye');
+const uEye = gl.getUniformLocation(boxP,'uEye');
 const uMVPs = gl.getUniformLocation(shadowP,'uMVP');
 const uFade = gl.getUniformLocation(shadowP,'uFade');
 const uCol = gl.getUniformLocation(shadowP,'uCol');
 gl.enable(gl.DEPTH_TEST);
 gl.enable(gl.CULL_FACE);
+gl.clearColor(bg[0], bg[1], bg[2], 1);
 
 function frame(){
   const dpr = Math.min(devicePixelRatio || 1, 2);
@@ -270,7 +257,6 @@ function frame(){
   const eye = [dist*Math.cos(pitch)*Math.sin(yaw), dist*Math.sin(pitch),
                dist*Math.cos(pitch)*Math.cos(yaw)];
   const vp = mul(persp(0.62, w/h, 0.02, 8), lookAt(eye, [0,0,0], [0,1,0]));
-  gl.clearColor(bg[0], bg[1], bg[2], 1);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
   gl.useProgram(shadowP);
@@ -286,7 +272,6 @@ function frame(){
   gl.useProgram(boxP);
   gl.uniformMatrix4fv(uMVPb, false, vp);
   gl.uniform1i(uTex, 0);
-  gl.uniform1f(uDim, dim);
   gl.uniform3fv(uEye, eye);
   gl.bindVertexArray(vao);
   gl.activeTexture(gl.TEXTURE0);
